@@ -2,6 +2,7 @@ package Objects;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 public class Rect {
 	
@@ -19,7 +20,7 @@ public class Rect {
 	}
 	
 	
-	public void draw(Graphics g) {
+	public void draw(Graphics2D g) {
 		
 		g.setColor(color);
 		g.drawRect((int)x, (int)y, (int)w, (int)h);

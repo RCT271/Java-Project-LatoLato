@@ -1,6 +1,9 @@
 package Objects;
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+
+import Main.Utils;
 
 public class Circle {
 	
@@ -17,7 +20,7 @@ public class Circle {
 	}
 	
 	
-	public void updatePos() {
+	private void updatePos() {
 		pos[0] = x;
 		pos[1] = y;
 	}
@@ -25,7 +28,7 @@ public class Circle {
 	
 	public boolean collides(Circle circle) {
 		
-		if (getDistance(circle.pos, this.pos) <= circle.r + this.r) {
+		if (Utils.getDistance(circle.pos, this.pos) < circle.r + this.r) {
 			return true;
 		}
 		
@@ -33,21 +36,13 @@ public class Circle {
 	}
 	
 	
-	public void draw(Graphics g) {
+	public void draw(Graphics2D g) {
 		int x = (int)this.x;
 		int y = (int)this.y;
 		int r = (int)this.r;
 		
 		g.drawRoundRect(x - r, y - r, r*2, r*2, 360, 360);
 	}
-	
-	
-	private double getDistance(double[] p1, double[] p2) {
-		// distance formula sqrt( (x2 - x1)^2 + (y2 - y1)^2 )
-		
-		return Math.sqrt( Math.pow(p2[0] - p1[0], 2) + Math.pow(p2[1] - p1[1], 2) );
-	}
-	
 	
 	public void setX(double xVal) {
 		this.x = xVal;
@@ -60,7 +55,7 @@ public class Circle {
 	}
 	
 	public void moveX(double xVel) {
-		this.x += x;
+		this.x += xVel;
 		updatePos();
 	}
 	

@@ -11,30 +11,33 @@ import Panels.*;
 
 public class Game extends JPanel{
 
-	public static final int GAME_SPEED = 30; // speed is like working on 30 FPS
+	public static final int GAME_SPEED = 24; // speed is like working on 24 FPS
 	GameLoop gameLoop;
 	public Dimension size;
 	public MainLoop mainLoop;
-	public double prevTime, dt;
+	public double prevTime;
+	public static double dt;
 	
 	public Game() {
 		// initialize this class
 		size = new Dimension(480, 720);
 		this.setPreferredSize(size);
 		
+		// add listeners
+		this.addKeyListener(new AKL());
+		this.addMouseMotionListener(new MML());
+		this.addMouseListener(new ML());
+		
+		this.setFocusable(true);
+		this.setVisible(true);
+		
 		// initialize game panels
 		mainLoop = new MainLoop(this);
 		mainLoop.active = true;
 		mainLoop.visible = true;
 		
+		// for the dt
 		prevTime = System.currentTimeMillis();
-		
-		// add listeners
-		this.addKeyListener(new AKL());
-		this.addMouseMotionListener(new MML());
-		
-		this.setFocusable(true);
-		this.setVisible(true);
 		
 		// start the game loop
 		gameLoop = new GameLoop(this);
@@ -43,9 +46,11 @@ public class Game extends JPanel{
 	
 	public void update() {
 		
-		// get the dt right
-		dt = System.currentTimeMillis() - prevTime;
-		dt *= GAME_SPEED;
+		// get the dt right... dt means delta time (delta means change) so, dt means change in time
+		// This is used to keep the movement of the game relative to the real life despite how many frames is
+		// being displayed in a second
+		Game.dt = (System.currentTimeMillis() - prevTime) /1000;
+		Game.dt *= GAME_SPEED;
 		prevTime = System.currentTimeMillis();
 		
 		// update game panels
@@ -80,6 +85,41 @@ public class Game extends JPanel{
 		@Override
 		public void keyReleased(KeyEvent e) {
 			mainLoop.keyReleased(e);
+			
+		}
+		
+	}
+	
+	
+	class ML implements MouseListener {
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			mainLoop.mouseClicked(e);
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			mainLoop.mousePressed(e);
+			
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			mainLoop.mouseReleased(e);
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			mainLoop.mouseEntered(e);
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			mainLoop.mouseExited(e);
 			
 		}
 		
