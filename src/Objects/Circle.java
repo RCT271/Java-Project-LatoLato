@@ -28,7 +28,7 @@ public class Circle {
 	
 	public boolean collides(Circle circle) {
 		
-		if (Utils.getDistance(circle.pos, this.pos) < circle.r + this.r) {
+		if ((int)Utils.getDistance(circle.pos, this.pos) < (int)(circle.r + this.r)) {
 			return true;
 		}
 		

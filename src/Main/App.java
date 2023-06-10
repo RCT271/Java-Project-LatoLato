@@ -8,10 +8,10 @@ public class App {
 		JFrame win = new JFrame("LATO2");
 		Game game = new Game();
 		
-		win.setFocusable(true);
 		win.add(game);
 		win.pack();
 		win.setLocationRelativeTo(null);
+		win.setFocusable(true);
 		win.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		win.setVisible(true);
 	}

@@ -16,6 +16,8 @@ public class Lato {
 	
 	//debug
 	public int id;
+	double prevDist;
+	boolean moving = true;
 	
 	public Lato(double x, double y, double radius, double[] anchorPoint) {
 		this.anchorPoint = anchorPoint;
@@ -38,24 +40,48 @@ public class Lato {
 		
 		if (circle.collides(otherLato.circle) && !collided) {
 			angle -= vel * swayDir *Game.dt;
-			vel = vel*-0.5;
+			vel = vel*-0.8;
 			collided = true;
 		}
-		if (collided && Utils.getDistance(circle.pos, otherLato.circle.pos) > circle.r*2) {
+		if (collided && Utils.getDistance(circle.pos, otherLato.circle.pos) >= circle.r*2) {
 			collided = false;
 		}
 		
-		if (id == 0)
+		if (id == 0) {
 			System.out.println("vel: " + vel);
+			System.out.println("distance: " + Utils.getDistance(circle.pos, otherLato.circle.pos));
+		}
+		
+		if ((int)Utils.getDistance(circle.pos, otherLato.circle.pos) == 60 && prevDist == 60) {
+			vel = 0;
+			moving = false;
+		}
+
+		prevDist = (int)Utils.getDistance(circle.pos, otherLato.circle.pos);
 		
 		// gravity
-//		vel += 0.1 *Game.dt;
+		if (moving) {			
+			vel += 0.5 *Game.dt;
+		}
 		
 	}
 	
 	
+	public void pull() {
+		if (circle.y > anchorPoint[1]) {			
+			this.vel -= 9;
+		}
+		else {
+			this.vel += 9;
+		}
+	}
+	
+	
 	public void draw(Graphics2D g) {
-		g.setColor(Color.red);
+		if (id == 0)
+			g.setColor(Color.red);
+		else
+			g.setColor(Color.blue);
 		circle.draw(g);
 		g.setColor(Color.black);
 		g.drawLine((int)circle.x, (int)circle.y, (int)anchorPoint[0], (int)anchorPoint[1]);

@@ -27,8 +27,7 @@ public class Game extends JPanel{
 		this.addKeyListener(new AKL());
 		this.addMouseMotionListener(new MML());
 		this.addMouseListener(new ML());
-		
-		this.setFocusable(true);
+//		this.setFocusable(true);
 		this.setVisible(true);
 		
 		// initialize game panels

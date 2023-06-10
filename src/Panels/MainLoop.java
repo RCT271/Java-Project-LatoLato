@@ -12,7 +12,7 @@ import java.awt.event.MouseMotionListener;
 import Main.Game;
 import Objects.*;
 
-public class MainLoop extends GamePanel implements MouseMotionListener, KeyListener, MouseListener{
+public class MainLoop extends GamePanel implements MouseListener, MouseMotionListener, KeyListener{
 	
 	
 	double[] anchorPoint = new double[2];
@@ -25,9 +25,9 @@ public class MainLoop extends GamePanel implements MouseMotionListener, KeyListe
 		anchorPoint[0] = game.size.width/2;
 		anchorPoint[1] = 300;
 		
-		latoLato[0] = new Lato(game.size.width/2-30, 400, 30, anchorPoint);
+		latoLato[0] = new Lato(50, 400, 30, anchorPoint);
 		latoLato[0].id = 0;
-		latoLato[1] = new Lato(game.size.width/2+30, 400, 30, anchorPoint);
+		latoLato[1] = new Lato(game.size.width-50, 400, 30, anchorPoint);
 		latoLato[1].id = 1;
 	}
 	
@@ -69,7 +69,7 @@ public class MainLoop extends GamePanel implements MouseMotionListener, KeyListe
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		// TODO Auto-generated method stub
+		
 	}
 	
 		// key listener
@@ -92,7 +92,10 @@ public class MainLoop extends GamePanel implements MouseMotionListener, KeyListe
 		// mouse listener
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
+		System.out.println(e.getX());
+		for (Lato lato : latoLato) {
+			lato.pull();
+		}
 		
 	}
 		
