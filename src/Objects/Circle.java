@@ -35,6 +35,15 @@ public class Circle {
 		return false;
 	}
 	
+	public boolean collides(int x, int y) {
+		
+		if ((int)Utils.getDistance(new double[] {x, y}, this.pos) < (int)this.r) {
+			return true;
+		}
+		
+		return false;
+	}
+	
 	
 	public void draw(Graphics2D g) {
 		int x = (int)this.x;

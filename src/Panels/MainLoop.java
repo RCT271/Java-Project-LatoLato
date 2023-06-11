@@ -16,7 +16,10 @@ public class MainLoop extends GamePanel implements MouseListener, MouseMotionLis
 	
 	
 	double[] anchorPoint = new double[2];
-	public Lato[] latoLato = new Lato[2];
+	public LatoLato latoLato;
+	OsuCircle osu;
+	
+	double[] clickedPos;
 	
 	public MainLoop(Game game) {
 		super(game);
@@ -25,20 +28,22 @@ public class MainLoop extends GamePanel implements MouseListener, MouseMotionLis
 		anchorPoint[0] = game.size.width/2;
 		anchorPoint[1] = 300;
 		
-		latoLato[0] = new Lato(50, 400, 30, anchorPoint);
-		latoLato[0].id = 0;
-		latoLato[1] = new Lato(game.size.width-50, 400, 30, anchorPoint);
-		latoLato[1].id = 1;
+		osu = new OsuCircle(game.size.width/2, game.size.height*0.90, 40, 130);
+		latoLato = new LatoLato(anchorPoint, osu);
 	}
 	
 	@Override
 	public void update() {
 		if (!active) return;
 		
-		for (int i = 0; i < latoLato.length; i++) {
-			Lato lato = latoLato[i];
+		latoLato.update();
+		osu.update();
+		
+		if (clickedPos != null) {
 			
-			lato.update(latoLato[i == 0 ? 1 : 0]);
+			osu.click((int)clickedPos[0], (int)clickedPos[1], latoLato);
+			
+			clickedPos = null;
 		}
 		
 	}
@@ -53,9 +58,8 @@ public class MainLoop extends GamePanel implements MouseListener, MouseMotionLis
 		g.fillRect(0, 0, game.size.width, game.size.height);
 		
 		// draw the objects
-		for (Lato lato : latoLato) {
-			lato.draw(g);
-		}
+		latoLato.draw(g);
+		osu.draw(g);
 	}
 
 	
@@ -92,11 +96,7 @@ public class MainLoop extends GamePanel implements MouseListener, MouseMotionLis
 		// mouse listener
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		System.out.println(e.getX());
-		for (Lato lato : latoLato) {
-			lato.pull();
-		}
-		
+		clickedPos = new double[] {e.getX(), e.getY()};
 	}
 		
 	@Override
