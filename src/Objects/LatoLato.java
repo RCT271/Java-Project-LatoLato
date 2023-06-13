@@ -16,18 +16,18 @@ public class LatoLato {
 	
 	double[] anchorPoint = new double[2];
 	
-	Image[] imgs = new Image[12];
+	Image[] imgs = new Image[13];
 	double x, y;
-	
 	OsuCircle osu;
+	boolean active = false, isFever = false;
+	double idx = 0, maxIdx = 1000, vel = 5, velDir = 1, targetIdx = 0, minVel = 5;
 	
-	boolean active = false;
-	
-	double idx = 0, maxIdx = 500, vel = 5, velDir = 1;
+	int score = 0;
 	
 	public LatoLato(double[] anchorPoint, OsuCircle osu) {
 		this.anchorPoint = anchorPoint;
 		this.osu = osu;
+		
 		x = anchorPoint[0];
 		y = anchorPoint[1];
 		
@@ -41,29 +41,60 @@ public class LatoLato {
 	
 	public void update() {
 		
-		idx += vel * velDir *Game.dt;
-		
+
+		// flips the movement
+		if (idx > targetIdx) {
+			idx = targetIdx;
+			velDir *= -1;
+		}
+
+		// what moves the lato lato
+		if (!(idx == 0 && targetIdx == 0)) {			
+			idx += vel * velDir *Game.dt;
+		}
+	
+		// top collision
 		if (idx > maxIdx) {
 			new Sound().play();
-			idx = maxIdx;
-			velDir *= -1;
 		}
 		
+		
+		// bot collision
 		if (idx < 0) {
-			new Sound().play();
 			idx = 0;
 			velDir *= -1;
+			new Sound().play();
 		}
 		
-//		if (idx < maxIdx/2) {
-//			osu.outR = osu.maxR * (idx/(maxIdx/2));
+//		// gravity (experimental)
+//		if (velDir > 0) {
+//			if (vel > minVel) {				
+//				vel -= 0.5 * Game.dt;
+//			}
+//			else {
+//				vel = minVel;
+//			}
 //		}
-//		else if (idx > maxIdx/2) {
-//			osu.outR = osu.maxR * ((maxIdx/2)/idx);
+//		else {
+//			vel += 0.25 *Game.dt;
 //		}
+//		
 		
-		osu.outR = osu.inR * (1 + idx/maxIdx);
+		// updating the approach circle
+		if (idx < maxIdx/2) {
+			osu.outR = osu.inR + osu.maxDist * idx/(maxIdx/2);
+		}
+		else {
+			if (isFever) {				
+				osu.outR = osu.inR + osu.maxDist * (maxIdx - idx)/(maxIdx/2);
+			}
+		}
 		
+		
+//		// calculating the accuracy of the osu circle (experimental)
+//		double accuracy;
+//		accuracy = 1 - (osu.outR - osu.inR) / osu.maxDist;
+//		System.out.println("accu: " + accuracy);
 	}
 	
 	public void draw(Graphics2D g) {

@@ -38,29 +38,6 @@ public class OsuCircle {
 	public void update() {
 		if (!active) return;
 		
-//		if (outR < inR) {
-//			outR = inR + Math.abs(outR - inR);
-//			dir *= -1;
-//			vel *= 0.9;
-//			if (targetR > inR) {				
-//				targetR *= 0.90;
-//			}
-//			else {
-//				targetR = inR;
-//			}
-//		}
-//		
-//		if (outR > targetR) {
-//			outR = targetR;
-//			dir *= -1;
-//		}
-//		
-//		outR -= vel * dir *Game.dt;
-//		vel += 0.01 *Game.dt;
-//		approachPercent = (outR - inR) / maxDist;
-//		
-////		System.out.println(approachPercent);
-		
 	}
 	
 	public double getApproachDistPercent() {
@@ -71,16 +48,33 @@ public class OsuCircle {
 	public void click(int mx, int my, LatoLato latoLato) {
 		if (innerCircle.collides(mx, my)) {
 			
-			System.out.println(inR/outR);
+			double accuracy;
+			accuracy = 1 - (outR - inR) / maxDist;
+			accuracy *= 100;
+			System.out.println("accu: " + accuracy);
 			
-			if (inR/outR > 0.8) {
-				latoLato.vel += 4;
-				System.out.println("added");
+			if (!latoLato.isFever) {				
+				if (accuracy > 85) {
+					latoLato.targetIdx += 200;
+					latoLato.vel += 5;
+					if (latoLato.targetIdx > latoLato.maxIdx) {
+						latoLato.isFever = true;
+						latoLato.targetIdx = latoLato.maxIdx;
+					}
+				}
+				else {
+					latoLato.targetIdx -= 100; 
+					latoLato.vel -= 5;
+				}
 			}
 			else {
-				latoLato.vel -= 4;
-				System.out.println("subtracted");
+				
+				if (accuracy > 60) {
+					latoLato.vel += 6;
+				}
+				
 			}
+			
 			
 		}
 	}

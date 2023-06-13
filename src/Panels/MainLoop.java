@@ -28,7 +28,7 @@ public class MainLoop extends GamePanel implements MouseListener, MouseMotionLis
 		anchorPoint[0] = game.size.width/2;
 		anchorPoint[1] = 300;
 		
-		osu = new OsuCircle(game.size.width/2, game.size.height*0.90, 40, 130);
+		osu = new OsuCircle(game.size.width/2, game.size.height*0.90, 30, 130);
 		latoLato = new LatoLato(anchorPoint, osu);
 	}
 	
@@ -41,7 +41,7 @@ public class MainLoop extends GamePanel implements MouseListener, MouseMotionLis
 		
 		if (clickedPos != null) {
 			
-			osu.click((int)clickedPos[0], (int)clickedPos[1], latoLato);
+			
 			
 			clickedPos = null;
 		}
@@ -97,6 +97,7 @@ public class MainLoop extends GamePanel implements MouseListener, MouseMotionLis
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		clickedPos = new double[] {e.getX(), e.getY()};
+		osu.click((int)clickedPos[0], (int)clickedPos[1], latoLato);
 	}
 		
 	@Override
