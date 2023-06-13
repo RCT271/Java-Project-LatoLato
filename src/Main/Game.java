@@ -13,7 +13,7 @@ public class Game extends JPanel{
 
 	public static final int GAME_SPEED = 30; // speed is like working on 24 FPS
 	GameLoop gameLoop;
-	public Dimension size;
+	public static Dimension size;
 	public MainLoop mainLoop;
 	public double prevTime;
 	public static double dt;

@@ -11,7 +11,7 @@ public class OsuCircle {
 	
 	Circle innerCircle;
 	
-	public boolean active = true;
+	public boolean active = true, clicked = false;
 	
 	public OsuCircle(double centerX, double centerY, double innerCircleRadius, double outerCircleRadius) {
 		// for collision
@@ -51,29 +51,34 @@ public class OsuCircle {
 			double accuracy;
 			accuracy = 1 - (outR - inR) / maxDist;
 			accuracy *= 100;
-			System.out.println("accu: " + accuracy);
+			System.out.println("vel: " + latoLato.vel);
 			
-			if (!latoLato.isFever) {				
+			if (!latoLato.isFever) {
+				clicked = true;
 				if (accuracy > 85) {
 					latoLato.targetIdx += 200;
 					latoLato.vel += 5;
-					if (latoLato.targetIdx > latoLato.maxIdx) {
-						latoLato.isFever = true;
-						latoLato.targetIdx = latoLato.maxIdx;
-					}
 				}
 				else {
 					latoLato.targetIdx -= 100; 
-					latoLato.vel -= 5;
+					latoLato.vel -= 10;
+					if (latoLato.vel < 0) {
+						vel = 4;
+					}
 				}
 			}
 			else {
 				
-				if (accuracy > 60) {
+				if (accuracy > 50) {
 					latoLato.vel += 6;
+				}
+				else {
+					latoLato.vel -= 6;
 				}
 				
 			}
+			
+			clicked = true;
 			
 			
 		}

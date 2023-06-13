@@ -19,8 +19,9 @@ public class LatoLato {
 	Image[] imgs = new Image[13];
 	double x, y;
 	OsuCircle osu;
-	boolean active = false, isFever = false;
-	double idx = 0, maxIdx = 1000, vel = 5, velDir = 1, targetIdx = 0, minVel = 5;
+	public boolean active = false, isFever = false;
+	public double idx = 0, maxIdx = 1000, vel = 5, velDir = 1, targetIdx = 0, minVel = 5;
+	public double feverMinVel;
 	
 	int score = 0;
 	
@@ -40,8 +41,6 @@ public class LatoLato {
 	}
 	
 	public void update() {
-		
-
 		// flips the movement
 		if (idx > targetIdx) {
 			idx = targetIdx;
@@ -59,11 +58,50 @@ public class LatoLato {
 		}
 		
 		
+		// condition to start fever mode
+		if (targetIdx > maxIdx && !isFever) {
+			feverMinVel = vel*0.8;
+			targetIdx = maxIdx;
+			isFever = true;
+		}
+		
+		
 		// bot collision
 		if (idx < 0) {
 			idx = 0;
 			velDir *= -1;
 			new Sound().play();
+			
+			if (!isFever) {
+				targetIdx -= 50;
+				if (!osu.clicked) {
+					vel -= 5;
+				}
+				else {
+					osu.clicked = false;
+				}
+				if (targetIdx < 0) {
+					targetIdx = 0;
+				}
+			}
+		}
+		
+		
+		// game over.. when the lato lato is not moving anymore
+		if (idx == 0 && targetIdx == 0) {
+			
+		}
+		
+		
+		// experimental game feature
+		if (!isFever) {
+			targetIdx -= 2 *Game.dt;
+			if (targetIdx < 0) {
+				targetIdx = 0;
+			}
+		}
+		if (isFever) {
+			vel -= 0.1 *Game.dt;
 		}
 		
 //		// gravity (experimental)

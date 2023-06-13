@@ -18,6 +18,8 @@ public class MainLoop extends GamePanel implements MouseListener, MouseMotionLis
 	double[] anchorPoint = new double[2];
 	public LatoLato latoLato;
 	OsuCircle osu;
+	HealthBar healthBar;
+	
 	
 	double[] clickedPos;
 	
@@ -25,25 +27,30 @@ public class MainLoop extends GamePanel implements MouseListener, MouseMotionLis
 		super(game);
 		
 		// generating the lato lato
-		anchorPoint[0] = game.size.width/2;
+		anchorPoint[0] = Game.size.width/2;
 		anchorPoint[1] = 300;
 		
-		osu = new OsuCircle(game.size.width/2, game.size.height*0.90, 30, 130);
+		healthBar = new HealthBar(20, Game.size.width*0.75, 30);
+		
+		osu = new OsuCircle(Game.size.width/2, Game.size.height*0.90, 30, 130);
 		latoLato = new LatoLato(anchorPoint, osu);
 	}
 	
 	@Override
 	public void update() {
 		if (!active) return;
+
 		
 		latoLato.update();
 		osu.update();
 		
-		if (clickedPos != null) {
-			
-			
-			
-			clickedPos = null;
+		if (!latoLato.isFever) {			
+			healthBar.hpPercent = latoLato.targetIdx/latoLato.maxIdx;
+		}
+		else {
+			healthBar.hpBgColor = Color.green;
+			healthBar.hpColor = Color.cyan;
+			healthBar.hpPercent = (latoLato.vel - latoLato.minVel)/100;
 		}
 		
 	}
@@ -55,11 +62,12 @@ public class MainLoop extends GamePanel implements MouseListener, MouseMotionLis
 		
 		// draw the background
 		g.setColor(new Color(218, 218, 218));
-		g.fillRect(0, 0, game.size.width, game.size.height);
+		g.fillRect(0, 0, Game.size.width, Game.size.height);
 		
 		// draw the objects
 		latoLato.draw(g);
 		osu.draw(g);
+		healthBar.draw(g);
 	}
 
 	
