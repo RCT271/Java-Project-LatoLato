@@ -1,6 +1,7 @@
 package Panels;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
@@ -37,7 +38,7 @@ public class MainLoop extends GamePanel implements MouseListener, MouseMotionLis
 		latoLato = new LatoLato(anchorPoint, osu);
 		
 		bgMusic = new Sound("src/sprites/cloud cute.wav");
-		bgMusic.adjustVolume(-15f);
+		bgMusic.adjustVolume(-5f);
 		bgMusic.loop();
 	}
 	
@@ -85,6 +86,12 @@ public class MainLoop extends GamePanel implements MouseListener, MouseMotionLis
 		latoLato.draw(g);
 		osu.draw(g);
 		healthBar.draw(g);
+		
+		// drawing the score
+		g.setColor(Color.black);
+//		g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 60));
+		g.setFont(new Font("Alkhemikal", Font.PLAIN, 69));
+		g.drawString("" + latoLato.score, Game.size.width/2 - g.getFontMetrics().stringWidth("" + latoLato.score)/2, 150);
 	}
 
 	

@@ -31,6 +31,9 @@ public class GameOver extends GamePanel{
 		g.setColor(black);
 		g.fillRect(0, 0, Game.size.width, Game.size.height);
 		
+		g.setColor(Color.white);
+		g.setFont(new Font("Alkhemikal", Font.PLAIN, 100));
+		g.drawString("Jump King", Game.size.width/2 - g.getFontMetrics().stringWidth("Jump King")/2, 220);
 	}
 	
 	public void activate() {

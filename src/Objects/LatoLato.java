@@ -186,11 +186,6 @@ public class LatoLato {
 		int drawY = (int)(y - imgs[i].getHeight(null)*0.5);
 		
 		g.drawImage(imgs[i], drawX, drawY, imgs[i].getWidth(null), imgs[i].getHeight(null), null);
-		
-		// drawing the score
-		g.setColor(Color.black);
-		g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 60));
-		g.drawString("" + score, Game.size.width/2 - 60, 150);
 	}
 }
 
