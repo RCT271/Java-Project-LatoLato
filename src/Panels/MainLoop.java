@@ -37,13 +37,13 @@ public class MainLoop extends GamePanel implements MouseListener, MouseMotionLis
 		latoLato = new LatoLato(anchorPoint, osu);
 		
 		bgMusic = new Sound("src/sprites/cloud cute.wav");
+		bgMusic.adjustVolume(-15f);
 		bgMusic.loop();
 	}
 	
 	@Override
 	public void update() {
 		if (!active) return;
-
 		
 		latoLato.update();
 		osu.update();
@@ -64,12 +64,18 @@ public class MainLoop extends GamePanel implements MouseListener, MouseMotionLis
 			}
 		}
 		
+		if (active) {
+			if (!latoLato.active) {
+				deactivate();
+				game.gameOverPanel.activate();
+			}
+		}
+		
 	}
 	
 	@Override
-	public void draw(Graphics gr) {
+	public void draw(Graphics2D g) {
 		if (!visible) return;
-		Graphics2D g = (Graphics2D) gr;
 		
 		// draw the background
 		g.setColor(new Color(218, 218, 218));
@@ -81,6 +87,12 @@ public class MainLoop extends GamePanel implements MouseListener, MouseMotionLis
 		healthBar.draw(g);
 	}
 
+	
+	public void deactivate() {
+		bgMusic.stop();
+		this.active = false;
+	}
+	
 	
 	// listeners	
 	
@@ -115,6 +127,7 @@ public class MainLoop extends GamePanel implements MouseListener, MouseMotionLis
 		// mouse listener
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		if (!active) return;
 		clickedPos = new double[] {e.getX(), e.getY()};
 		osu.click((int)clickedPos[0], (int)clickedPos[1], latoLato);
 	}

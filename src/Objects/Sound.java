@@ -7,6 +7,7 @@ import java.net.URL;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
@@ -14,6 +15,7 @@ public class Sound {
 
 	public Clip clip;
 	URL soundURL;
+	FloatControl floatControl;
 	
 	public Sound(String path) {
 //		 File file = new File("src/sprites/lato.wav");
@@ -22,6 +24,7 @@ public class Sound {
 			AudioInputStream ais = AudioSystem.getAudioInputStream(file);
 			clip = AudioSystem.getClip();
 			clip.open(ais);
+			floatControl = (FloatControl)clip.getControl(FloatControl.Type.MASTER_GAIN);
 		} catch (UnsupportedAudioFileException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -48,6 +51,8 @@ public class Sound {
 		clip.stop();
 	}
 	
-	
+	public void adjustVolume(float value) {
+        floatControl.setValue(value);
+    }
 	
 }

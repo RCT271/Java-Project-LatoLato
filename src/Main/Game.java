@@ -15,6 +15,7 @@ public class Game extends JPanel{
 	GameLoop gameLoop;
 	public static Dimension size;
 	public MainLoop mainLoop;
+	public GameOver gameOverPanel;
 	public double prevTime;
 	public static double dt;
 	
@@ -34,6 +35,7 @@ public class Game extends JPanel{
 		mainLoop = new MainLoop(this);
 		mainLoop.active = true;
 		mainLoop.visible = true;
+		gameOverPanel = new GameOver(this);
 		
 		// for the dt
 		prevTime = System.currentTimeMillis();
@@ -54,6 +56,7 @@ public class Game extends JPanel{
 		
 		// update game panels
 		mainLoop.update();
+		gameOverPanel.update();
 		
 	}
 	
@@ -63,6 +66,7 @@ public class Game extends JPanel{
 		
 		// draw the game panels
 		mainLoop.draw(g);
+		gameOverPanel.draw(g);
 	}
 	
 	

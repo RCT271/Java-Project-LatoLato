@@ -1,6 +1,7 @@
 package Panels;
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 import Main.*;
 
@@ -17,8 +18,9 @@ public abstract class GamePanel {
 	public void update() {
 		// do something
 	}
-	
-	public void draw(Graphics g) {
-		// do something
+
+	public void draw(Graphics2D g) {
+		// TODO Auto-generated method stub
+		
 	}
 }
