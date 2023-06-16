@@ -1,6 +1,7 @@
 package Objects;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
 
@@ -19,11 +20,11 @@ public class LatoLato {
 	Image[] imgs = new Image[13];
 	double x, y;
 	OsuCircle osu;
-	public boolean active = false, isFever = false;
-	public double idx = 0, maxIdx = 1000, vel = 5, velDir = 1, targetIdx = 0, minVel = 5;
-	public double feverMinVel;
+	public boolean active = true, doubleCollision = false, fever = false;
+	public double idx = 0, maxIdx = 1000, vel = 5, velDir = 1, targetIdx = 0;
+	public double minVel, maxVel, feverHp = 1000, maxFeverHp = feverHp;
 	
-	int score = 0;
+	public int score = 0, multiplier = 1;
 	
 	public LatoLato(double[] anchorPoint, OsuCircle osu) {
 		this.anchorPoint = anchorPoint;
@@ -32,7 +33,7 @@ public class LatoLato {
 		x = anchorPoint[0];
 		y = anchorPoint[1];
 		
-		sound  = new Sound();
+		sound  = new Sound("src/sprites/lato.wav");
 		 
 		// sprite
 		for (int i = 0; i < imgs.length; i++) {
@@ -41,6 +42,8 @@ public class LatoLato {
 	}
 	
 	public void update() {
+		if (!active) return;
+		
 		// flips the movement
 		if (idx > targetIdx) {
 			idx = targetIdx;
@@ -54,15 +57,32 @@ public class LatoLato {
 	
 		// top collision
 		if (idx > maxIdx) {
-			new Sound().play();
+			score += 1*multiplier;
+			
+			if (doubleCollision) {
+				if (!osu.clicked) {
+					if (!fever) {						
+						vel -= 5 *Game.dt;
+					}
+				}
+				else {
+					osu.clicked = false;
+				}
+			}
+			
+			new Sound("src/sprites/lato.wav").play();
 		}
 		
 		
-		// condition to start fever mode
-		if (targetIdx > maxIdx && !isFever) {
-			feverMinVel = vel*0.8;
+		// condition to start double collision mode
+		if (targetIdx > maxIdx && !doubleCollision) {
+			System.out.println("started double collision");
+			minVel = vel;
+			maxVel = vel + 60;
+			vel += 20;
+			multiplier = 1;
 			targetIdx = maxIdx;
-			isFever = true;
+			doubleCollision = true;
 		}
 		
 		
@@ -70,69 +90,91 @@ public class LatoLato {
 		if (idx < 0) {
 			idx = 0;
 			velDir *= -1;
-			new Sound().play();
+			new Sound("src/sprites/lato.wav").play();
 			
-			if (!isFever) {
+			score += 1*multiplier;
+			
+			if (!doubleCollision) {
 				targetIdx -= 50;
+				// adjust the target
+				if (targetIdx < 0) {
+					targetIdx = 0;
+				}
+				
+				//
 				if (!osu.clicked) {
-					vel -= 5;
+					vel -= 5 *Game.dt;
 				}
 				else {
 					osu.clicked = false;
 				}
-				if (targetIdx < 0) {
-					targetIdx = 0;
+			}
+			else {
+				if (!osu.clicked) {
+					if (!fever) {						
+						vel -= 5 *Game.dt;
+					}
+				}
+				else {
+					osu.clicked = false;
 				}
 			}
-		}
-		
-		
-		// game over.. when the lato lato is not moving anymore
-		if (idx == 0 && targetIdx == 0) {
-			
-		}
-		
+		}		
 		
 		// experimental game feature
-		if (!isFever) {
+		if (!doubleCollision) {
 			targetIdx -= 2 *Game.dt;
 			if (targetIdx < 0) {
 				targetIdx = 0;
 			}
 		}
-		if (isFever) {
-			vel -= 0.1 *Game.dt;
+		
+		else if (doubleCollision) {
+			if ( (vel-minVel) > maxVel && !fever) {
+				vel += 20;
+				multiplier += 1;
+				System.out.println("increased");
+				System.out.println(multiplier);
+				fever = true;
+			}
+			
+			if (!fever) {
+				vel -= 0.1 *Game.dt;
+			}
+			else {
+				feverHp -= 2 *Game.dt;
+			}
 		}
 		
-//		// gravity (experimental)
-//		if (velDir > 0) {
-//			if (vel > minVel) {				
-//				vel -= 0.5 * Game.dt;
-//			}
-//			else {
-//				vel = minVel;
-//			}
-//		}
-//		else {
-//			vel += 0.25 *Game.dt;
-//		}
-//		
+		// conditions for game over
+		if (!doubleCollision) {
+			if (targetIdx == 0 && idx == 0 && vel != 5) {
+				active = false;
+			}
+		}
+		if (doubleCollision) {
+			if (!fever) {
+				if (vel < minVel) {
+					active = false;
+				}
+			}
+			else if (fever) {
+				if (feverHp <= 0 ) {
+					active = false;
+				}
+			}
+		}
+		
 		
 		// updating the approach circle
 		if (idx < maxIdx/2) {
 			osu.outR = osu.inR + osu.maxDist * idx/(maxIdx/2);
 		}
 		else {
-			if (isFever) {				
+			if (doubleCollision) {				
 				osu.outR = osu.inR + osu.maxDist * (maxIdx - idx)/(maxIdx/2);
 			}
 		}
-		
-		
-//		// calculating the accuracy of the osu circle (experimental)
-//		double accuracy;
-//		accuracy = 1 - (osu.outR - osu.inR) / osu.maxDist;
-//		System.out.println("accu: " + accuracy);
 	}
 	
 	public void draw(Graphics2D g) {
@@ -144,6 +186,11 @@ public class LatoLato {
 		int drawY = (int)(y - imgs[i].getHeight(null)*0.5);
 		
 		g.drawImage(imgs[i], drawX, drawY, imgs[i].getWidth(null), imgs[i].getHeight(null), null);
+		
+		// drawing the score
+		g.setColor(Color.black);
+		g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 60));
+		g.drawString("" + score, Game.size.width/2 - 60, 150);
 	}
 }
 

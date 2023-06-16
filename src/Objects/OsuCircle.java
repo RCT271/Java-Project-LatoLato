@@ -51,17 +51,22 @@ public class OsuCircle {
 			double accuracy;
 			accuracy = 1 - (outR - inR) / maxDist;
 			accuracy *= 100;
-			System.out.println("vel: " + latoLato.vel);
 			
-			if (!latoLato.isFever) {
+//			System.out.println("vel: " + latoLato.vel);
+			
+			if (latoLato.idx == 0 && latoLato.targetIdx == 0) {
+				new Sound("src/sprites/lato.wav").play();
+			}
+			
+			if (!latoLato.doubleCollision) {
 				clicked = true;
 				if (accuracy > 85) {
-					latoLato.targetIdx += 200;
-					latoLato.vel += 5;
+					latoLato.targetIdx += 240;
+					latoLato.vel += 10 *Game.dt;
 				}
 				else {
 					latoLato.targetIdx -= 100; 
-					latoLato.vel -= 10;
+					latoLato.vel -= 10 *Game.dt;
 					if (latoLato.vel < 0) {
 						vel = 4;
 					}
@@ -69,11 +74,25 @@ public class OsuCircle {
 			}
 			else {
 				
-				if (accuracy > 50) {
-					latoLato.vel += 6;
+				if (!latoLato.fever) {					
+					if (accuracy > 60) {
+						latoLato.vel += 9*latoLato.multiplier *Game.dt;
+					}
+					else {
+						latoLato.vel -= 12*latoLato.multiplier *Game.dt;
+					}
 				}
 				else {
-					latoLato.vel -= 6;
+					if (accuracy > 60) {
+						latoLato.feverHp += 100 *Game.dt;
+						if (latoLato.feverHp > latoLato.maxFeverHp) {
+							latoLato.feverHp = latoLato.maxFeverHp;
+						}
+					}
+					else {
+//						latoLato.feverHp -= 50 *Game.dt;
+						latoLato.feverHp *= 0.97;
+					}
 				}
 				
 			}

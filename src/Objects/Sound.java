@@ -12,12 +12,12 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class Sound {
 
-	Clip clip;
+	public Clip clip;
 	URL soundURL;
 	
-	public Sound() {
-		 soundURL = getClass().getResource("sprites/lato.wav");
-		 File file = new File("src/sprites/lato.wav");
+	public Sound(String path) {
+//		 File file = new File("src/sprites/lato.wav");
+		File file = new File(path);
 		 try {
 			AudioInputStream ais = AudioSystem.getAudioInputStream(file);
 			clip = AudioSystem.getClip();
@@ -37,6 +37,12 @@ public class Sound {
 	public void play() {
 		clip.start();
 	}
+	
+	
+	public void loop() {
+		clip.loop(0);
+	}
+	
 	
 	public void stop() {
 		clip.stop();

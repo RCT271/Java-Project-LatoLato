@@ -19,6 +19,7 @@ public class MainLoop extends GamePanel implements MouseListener, MouseMotionLis
 	public LatoLato latoLato;
 	OsuCircle osu;
 	HealthBar healthBar;
+	Sound bgMusic;
 	
 	
 	double[] clickedPos;
@@ -34,6 +35,9 @@ public class MainLoop extends GamePanel implements MouseListener, MouseMotionLis
 		
 		osu = new OsuCircle(Game.size.width/2, Game.size.height*0.90, 30, 130);
 		latoLato = new LatoLato(anchorPoint, osu);
+		
+		bgMusic = new Sound("src/sprites/cloud cute.wav");
+		bgMusic.loop();
 	}
 	
 	@Override
@@ -44,13 +48,20 @@ public class MainLoop extends GamePanel implements MouseListener, MouseMotionLis
 		latoLato.update();
 		osu.update();
 		
-		if (!latoLato.isFever) {			
+		if (!latoLato.doubleCollision) {			
 			healthBar.hpPercent = latoLato.targetIdx/latoLato.maxIdx;
 		}
 		else {
-			healthBar.hpBgColor = Color.green;
-			healthBar.hpColor = Color.cyan;
-			healthBar.hpPercent = (latoLato.vel - latoLato.minVel)/100;
+			if (latoLato.doubleCollision) {				
+				healthBar.hpBgColor = Color.green;
+				healthBar.hpColor = Color.orange;
+				healthBar.hpPercent = (latoLato.vel-latoLato.minVel)/latoLato.maxVel;
+			}
+			if (latoLato.fever) {
+				healthBar.hpBgColor = Color.orange;
+				healthBar.hpColor = Color.red;
+				healthBar.hpPercent = latoLato.feverHp/latoLato.maxFeverHp;
+			}
 		}
 		
 	}
