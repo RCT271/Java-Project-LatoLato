@@ -90,7 +90,7 @@ public class MainLoop extends GamePanel implements MouseListener, MouseMotionLis
 		// drawing the score
 		g.setColor(Color.black);
 //		g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 60));
-		g.setFont(new Font("Alkhemikal", Font.PLAIN, 69));
+		g.setFont(new Font("Arial", Font.PLAIN, 69));
 		g.drawString("" + latoLato.score, Game.size.width/2 - g.getFontMetrics().stringWidth("" + latoLato.score)/2, 150);
 	}
 
