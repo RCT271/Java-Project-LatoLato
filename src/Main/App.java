@@ -4,9 +4,11 @@ import javax.swing.JFrame;
 
 public class App {
 	
+	public static Game game;
+	
 	public static void main(String[] args) {
 		JFrame win = new JFrame("LATO2");
-		Game game = new Game();
+		game = new Game();
 		
 		win.add(game);
 		win.pack();

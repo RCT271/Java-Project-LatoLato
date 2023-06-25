@@ -14,15 +14,17 @@ public class Game extends JPanel{
 	public static final int GAME_SPEED = 30; // speed is like working on 24 FPS
 	GameLoop gameLoop;
 	public static Dimension size;
-	public MainLoop mainLoop;
-	public GameOver gameOverPanel;
+	public static MainLoop mainLoop;
+	public static GameOver gameOverPanel;
 	public double prevTime;
 	public static double dt;
+	public static Game game;
 	
 	public Game() {
 		// initialize this class
 		size = new Dimension(480, 720);
 		this.setPreferredSize(size);
+		
 		
 		// add listeners
 		this.addKeyListener(new AKL());
@@ -32,7 +34,7 @@ public class Game extends JPanel{
 		this.setVisible(true);
 		
 		// initialize game panels
-		mainLoop = new MainLoop(this);
+		mainLoop = new MainLoop();
 		mainLoop.active = true;
 		mainLoop.visible = true;
 		gameOverPanel = new GameOver(this);
@@ -99,7 +101,7 @@ public class Game extends JPanel{
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			mainLoop.mouseClicked(e);
-			
+			gameOverPanel.mouseClicked(e);
 		}
 
 		@Override

@@ -2,14 +2,17 @@ package Panels;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.event.KeyEvent;
+import java.awt.Image;
+import java.awt.event.*;
 import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import java.io.File;
 
+import javax.swing.ImageIcon;
+
+import static Main.Utils.*;
+
+import Main.App;
 import Main.Game;
 import Objects.*;
 
@@ -17,16 +20,18 @@ public class MainLoop extends GamePanel implements MouseListener, MouseMotionLis
 	
 	
 	double[] anchorPoint = new double[2];
-	public LatoLato latoLato;
+	public static LatoLato latoLato;
 	OsuCircle osu;
 	HealthBar healthBar;
 	Sound bgMusic;
+	public static HighScore hiScore; 
+	Image BG;
 	
 	
 	double[] clickedPos;
 	
-	public MainLoop(Game game) {
-		super(game);
+	public MainLoop() {
+		super(App.game);
 		
 		// generating the lato lato
 		anchorPoint[0] = Game.size.width/2;
@@ -38,8 +43,20 @@ public class MainLoop extends GamePanel implements MouseListener, MouseMotionLis
 		latoLato = new LatoLato(anchorPoint, osu);
 		
 		bgMusic = new Sound("src/sprites/cloud cute.wav");
-		bgMusic.adjustVolume(-5f);
+		bgMusic.adjustVolume(-25f);
 		bgMusic.loop();
+		
+		BG = new ImageIcon("src/sprites/background.jpg").getImage();
+		
+		File saveFile = new File("src/Objects/hiscore.sav");
+		
+		if (saveFile.exists()) {
+			hiScore = (HighScore) loadObject("src/Objects/hiscore.sav");
+		}
+		else {
+			hiScore = new HighScore(0);
+		}
+		
 	}
 	
 	@Override
@@ -65,10 +82,13 @@ public class MainLoop extends GamePanel implements MouseListener, MouseMotionLis
 			}
 		}
 		
-		if (active) {
-			if (!latoLato.active) {
-				deactivate();
-				game.gameOverPanel.activate();
+		// game over
+		if (!latoLato.active) {
+			deactivate();
+			Game.gameOverPanel.activate();
+			if (latoLato.score > hiScore.value) {
+				hiScore = new HighScore(latoLato.score);
+				saveObject("src/Objects/hiscore.sav", hiScore);
 			}
 		}
 		
@@ -81,6 +101,7 @@ public class MainLoop extends GamePanel implements MouseListener, MouseMotionLis
 		// draw the background
 		g.setColor(new Color(218, 218, 218));
 		g.fillRect(0, 0, Game.size.width, Game.size.height);
+		g.drawImage(BG, 0, 0, App.game.getWidth(), App.game.getHeight(), null);
 		
 		// draw the objects
 		latoLato.draw(g);
@@ -88,10 +109,11 @@ public class MainLoop extends GamePanel implements MouseListener, MouseMotionLis
 		healthBar.draw(g);
 		
 		// drawing the score
-		g.setColor(Color.black);
-//		g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 60));
-		g.setFont(new Font("Alkhemikal", Font.PLAIN, 69));
-		g.drawString("" + latoLato.score, Game.size.width/2 - g.getFontMetrics().stringWidth("" + latoLato.score)/2, 150);
+		if (this.active) {			
+			g.setColor(Color.black);
+			g.setFont(new Font("Arial", Font.PLAIN, 69));
+			g.drawString("" + latoLato.score, Game.size.width/2 - g.getFontMetrics().stringWidth("" + latoLato.score)/2, 150);
+		}
 	}
 
 	

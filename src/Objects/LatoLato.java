@@ -17,7 +17,7 @@ public class LatoLato {
 	
 	double[] anchorPoint = new double[2];
 	
-	Image[] imgs = new Image[13];
+	Image[] imgs = new Image[23];
 	double x, y;
 	OsuCircle osu;
 	public boolean active = true, doubleCollision = false, fever = false;
@@ -76,7 +76,6 @@ public class LatoLato {
 		
 		// condition to start double collision mode
 		if (targetIdx > maxIdx && !doubleCollision) {
-			System.out.println("started double collision");
 			minVel = vel;
 			maxVel = vel + 60;
 			vel += 20;
@@ -132,7 +131,7 @@ public class LatoLato {
 		else if (doubleCollision) {
 			if ( (vel-minVel) > maxVel && !fever) {
 				vel += 20;
-				multiplier += 1;
+				multiplier = 4;
 				System.out.println("increased");
 				System.out.println(multiplier);
 				fever = true;
